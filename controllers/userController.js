@@ -12,6 +12,7 @@ const registerLoad = async (req, res) => {
 
 const register = async (req, res) => {
   try {
+    
     const passwordHash = await bcrypt.hash(req.body.password, 10);
 
     const userData = new user({
@@ -22,12 +23,11 @@ const register = async (req, res) => {
     });
 
     await userData.save();
-    console.log("User added:", userData);
-    
-    res.redirect("/dashboard");
 
+    res.redirect("/dashboard");
   } catch (error) {
     console.error(error.message);
+    res.status(500).send("Internal Server Error");
   }
 };
 
@@ -35,30 +35,32 @@ const loadLogin = async (req, res) => {
   try {
     res.render("login");
   } catch (error) {
-    console.log("Internal Server Error");
+    res.status(500).send("Internal Server Error");
   }
 };
 
 const login = async (req, res) => {
   try {
-    const email = req.body.email;
-    const password = req.body.password;
+    const { email, password } =  req.body;
 
-    const userData = await user.findOne({ email:email });
-
+    const userData = await user.findOne({ email });
     if (userData) {
       const passwordMatch = await bcrypt.compare(password, userData.password);
+
       if (passwordMatch) {
-        req.session.user = userData;
+        req.session.user = await userData;
         res.redirect('/dashboard');
       } else {
         console.log("Wrong Password");
+        res.redirect('/login');
       }
     } else {
       console.log("User not Exist");
+      res.redirect('/login');
     }
   } catch (error) {
     console.error(error.message);
+    res.status(500).send("Internal Server Error");
   }
 };
 
@@ -68,23 +70,33 @@ const logout = async (req, res) => {
     res.redirect("/login");
   } catch (error) {
     console.error(error.message);
+    res.status(500).send("Internal Server Error");
+  }
+};
+const landingPage= async(req,res)=>{
+  try {
+    res.render("landingpage");
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Internal Server Error");
+  }}
+const loadDashboard = async (req, res) => {
+  try {
+    const userName = req.session.user.name;
+
+      res.render("dashboard", { userName });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Internal Server Error");
   }
 };
 
-const loadDashboard = async (req, res) => {
-    try {
-        res.render("dashboard");
-    
-    } catch (error) {
-      console.error(error.message);
-    }
-  };
-  
 module.exports = {
   registerLoad,
   register,
   loadDashboard,
   login,
   loadLogin,
+  landingPage,
   logout
 };

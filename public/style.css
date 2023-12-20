@@ -1,0 +1,15 @@
+/* styles.css */
+
+* {
+    padding: 0;
+    margin: 0;
+}
+
+.landing {
+    background-color: aqua;
+    width: 100%;
+    height: 100vh;
+    background-image: url('../public/chatAppbackground.jpg');
+    background-position: center;
+    background-size: cover;
+}
