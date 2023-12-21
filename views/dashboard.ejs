@@ -1,39 +1,113 @@
-<!-- <div
-  style="
-    background-image: url('../public/chatAppbackground.jpg');
-    background-size: cover;
-    background-position: center;
-    width: 100%;
-    height: 100vh;
-  "
->
-  <h1>Hello, <%= userName %>!</h1>
-  <a href="/logout">Logout</a>
-</div> -->
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body>
-    <div>
-      <div style="display: flex;gap: 12px;">
-        <div style="border: 1px solid gainsboro; padding: 14px">
-          <h1>CHATSWIFT</h1>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.2/socket.io.js"
+    integrity="sha512-VJ6+sp2E5rFQk05caiXXzQd1wBABpjEj1r5kMiLmGAAgwPItw1YpqsCCBtq8Yr1x6C49/mTpRdXtq8O2RcZhlQ=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"></script>
+</head>
 
-          <hr />
-          <ul style="text-decoration: none">
-            <li style="text-decoration: none">
-              <a href="/logout">Logout</a>
-            </li>
+<style>
+
+  .online-status {
+    color: green;
+  }
+  .offline-status {
+    color: red;
+  }
+  .chat-secion{
+    width: 120%;
+    background-color: aqua;
+    height: 60vh;
+    display: flex;
+    align-items: end;
+    
+
+  }
+</style>
+
+<body>
+  <div>
+    <div style="display: flex; gap: 12px">
+      <div style="border: 1px solid gainsboro; padding: 14px">
+        <h1>CHATSWIFT</h1>
+        <hr />
+        <ul style="text-decoration: none">
+          <li style="text-decoration: none">
+            <a href="/logout">Logout</a>
+          </li>
+        </ul>
+      </div>
+      <div style="padding: 14px">
+        <h2>Hii, <%= userName.name%>!</h2>
+        <div>
+          <ul style="border: 2px solid brown; padding: 5px; text-decoration: none;">
+            <% if (allUsers.length > 0) { for (let i = 0; i < allUsers.length; i++) { %>
+              <li class="user-list" style="border: 1px solid green; width: 300px; height: 100px; text-decoration: none; margin: 5px; padding-top: 14px; cursor: pointer;">
+                <img src="<%= 'http://localhost:3000/' + allUsers[i]['image'] %>" alt="profile" width="30px" height="30px" />
+                <%= allUsers[i]['name'] %>
+                <% if(allUsers[i]['isOnline']== 1){ %>
+                  <p class="online-status"  id="<%= allUsers[i]['_id']%>-status">Online</p>
+                <%}else{ %>
+                  <p class="offline-status"  id="<%= allUsers[i]['_id']%>-status">offline</p>
+                <% } %>
+              </li>
+            <% }} %>
           </ul>
         </div>
-        <div style="padding: 14px">
-          <h2>Hii, <%= userName %>!</h2>
+      </div>
+      <div>
+        <h3 class="chat-head">Click to start the chat</h3>
+        <div class="chat-secion" style="display: none" >
+          <div id="chat-container"></div>
+          <form action="" id="chat-form">
+            <input type="text" name="message" placeholder="type text" id="message" required />
+            <input type="submit" value="send message" />
+          </form>
         </div>
       </div>
     </div>
-  </body>
+  </div>
+</body>
+
+<script>
+ const sender_id = '<%= userName._id%>';
+const socket = io("/user-namespace", {
+  auth: {
+    token: sender_id
+  }
+});
+
+socket.on("connect", () => {
+  console.log("Connected to the server");
+});
+
+socket.on("disconnect", () => {
+  console.log("Disconnected from the server");
+});
+
+socket.on('getOnlineUser', function(data){
+  $('#' + data.userId + '-status').text('Online');
+  $('#' + data.userId + '-status').removeClass('offline-status').addClass('online-status');
+});
+
+socket.on('getOfflineUser', function(data){
+  $('#' + data.userId + '-status').text('Offline');
+  $('#' + data.userId + '-status').removeClass('online-status').addClass('offline-status');
+});
+
+
+  $(document).ready(function () {
+    $(".user-list").click(function () {
+      $(".chat-head").hide();
+      $(".chat-secion").show();
+    });
+  });
+
+
+</script>
 </html>

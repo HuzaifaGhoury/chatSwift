@@ -24,7 +24,7 @@ const register = async (req, res) => {
 
     await userData.save();
 
-    res.redirect("/dashboard");
+    res.redirect('/dashboard');
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Internal Server Error");
@@ -75,6 +75,7 @@ const logout = async (req, res) => {
 };
 const landingPage= async(req,res)=>{
   try {
+
     res.render("landingpage");
   } catch (error) {
     console.error(error.message);
@@ -82,9 +83,9 @@ const landingPage= async(req,res)=>{
   }}
 const loadDashboard = async (req, res) => {
   try {
-    const userName = req.session.user.name;
-
-      res.render("dashboard", { userName });
+  var allUsers = await user.find({ _id:{$nin:[req.session.user._id]}})
+    const userName = req.session.user;
+      res.render("dashboard", { userName,allUsers });
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Internal Server Error");
