@@ -1,6 +1,6 @@
 const user = require("../models/userModel");
 const bcrypt = require("bcrypt");
-
+const Chat = require('../models/chatModel')
 const registerLoad = async (req, res) => {
   try {
     res.render("register");
@@ -91,7 +91,22 @@ const loadDashboard = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
+const saveChat = async (req,res)=>{
+  try {
+    const chat = new Chat ({
+      sender_id:req.body.sender_id,
+      receiver_id:req.body.receiver_id,
+      message:req.body.message
+    })
+   const data = await chat.save()
+    // console.log("chat insery")
+    res.status(200).send({success:true,msg:'chat Added',data})
+    // console.log(data)
+  } catch (error) {
+    console.error(error.message);
 
+  }
+}
 module.exports = {
   registerLoad,
   register,
@@ -99,5 +114,6 @@ module.exports = {
   login,
   loadLogin,
   landingPage,
-  logout
+  logout,
+  saveChat
 };

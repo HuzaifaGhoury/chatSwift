@@ -1,113 +1,220 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Document</title>
-  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.2/socket.io.js"
-    integrity="sha512-VJ6+sp2E5rFQk05caiXXzQd1wBABpjEj1r5kMiLmGAAgwPItw1YpqsCCBtq8Yr1x6C49/mTpRdXtq8O2RcZhlQ=="
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer"></script>
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.2/socket.io.js"
+      integrity="sha512-VJ6+sp2E5rFQk05caiXXzQd1wBABpjEj1r5kMiLmGAAgwPItw1YpqsCCBtq8Yr1x6C49/mTpRdXtq8O2RcZhlQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+  </head>
 
-<style>
+  <style>
+    .online-status {
+      color: green;
+    }
+    .offline-status {
+      color: red;
+    }
+    .chat-secion {
+      width: 120%;
+      background-color: aqua;
+      height: 60vh;
+      display: flex;
+      align-items: end;
+    }
+    .current-user-chat {
+      margin: 2px;
+      text-align: right;
+      width: 500%;
+      padding-right: 20px;
+    }
+    .distance-user-chat {
+      margin: 2px;
+      text-align: left;
+      width: 100%;
+      padding-left: 20px;
+    }
+ 
+  </style>
 
-  .online-status {
-    color: green;
-  }
-  .offline-status {
-    color: red;
-  }
-  .chat-secion{
-    width: 120%;
-    background-color: aqua;
-    height: 60vh;
-    display: flex;
-    align-items: end;
-    
-
-  }
-</style>
-
-<body>
-  <div>
-    <div style="display: flex; gap: 12px">
-      <div style="border: 1px solid gainsboro; padding: 14px">
-        <h1>CHATSWIFT</h1>
-        <hr />
-        <ul style="text-decoration: none">
-          <li style="text-decoration: none">
-            <a href="/logout">Logout</a>
-          </li>
-        </ul>
-      </div>
-      <div style="padding: 14px">
-        <h2>Hii, <%= userName.name%>!</h2>
-        <div>
-          <ul style="border: 2px solid brown; padding: 5px; text-decoration: none;">
-            <% if (allUsers.length > 0) { for (let i = 0; i < allUsers.length; i++) { %>
-              <li class="user-list" style="border: 1px solid green; width: 300px; height: 100px; text-decoration: none; margin: 5px; padding-top: 14px; cursor: pointer;">
-                <img src="<%= 'http://localhost:3000/' + allUsers[i]['image'] %>" alt="profile" width="30px" height="30px" />
-                <%= allUsers[i]['name'] %>
-                <% if(allUsers[i]['isOnline']== 1){ %>
-                  <p class="online-status"  id="<%= allUsers[i]['_id']%>-status">Online</p>
-                <%}else{ %>
-                  <p class="offline-status"  id="<%= allUsers[i]['_id']%>-status">offline</p>
-                <% } %>
-              </li>
-            <% }} %>
+  <body>
+    <div>
+      <div style="display: flex; gap: 12px">
+        <div style="border: 1px solid gainsboro; padding: 14px">
+          <h1>CHATSWIFT</h1>
+          <hr />
+          <ul style="text-decoration: none">
+            <li style="text-decoration: none">
+              <a href="/logout">Logout</a>
+            </li>
           </ul>
         </div>
-      </div>
-      <div>
-        <h3 class="chat-head">Click to start the chat</h3>
-        <div class="chat-secion" style="display: none" >
-          <div id="chat-container"></div>
-          <form action="" id="chat-form">
-            <input type="text" name="message" placeholder="type text" id="message" required />
-            <input type="submit" value="send message" />
-          </form>
+        <div style="padding: 14px">
+          <h2>Hii, <%= userName.name%>!</h2>
+          <div>
+            <ul
+              style="
+                border: 2px solid brown;
+                padding: 5px;
+                text-decoration: none;
+              "
+            >
+              <% if (allUsers.length > 0) { for (let i = 0; i < allUsers.length;
+              i++) { %>
+              <li
+                class="user-list"
+                style="
+                  border: 1px solid green;
+                  width: 300px;
+                  height: 100px;
+                  text-decoration: none;
+                  margin: 5px;
+                  padding-top: 14px;
+                  cursor: pointer;
+                "
+                data-id="<%=allUsers[i]['_id']%>"
+              >
+                <img
+                  src="<%= 'http://localhost:3000/' + allUsers[i]['image'] %>"
+                  alt="profile"
+                  width="30px"
+                  height="30px"
+                />
+                <%= allUsers[i]['name'] %> <% if(allUsers[i]['isOnline']== 1){
+                %>
+                <p class="online-status" id="<%= allUsers[i]['_id']%>-status">
+                  Online
+                </p>
+                <%}else{ %>
+                <p class="offline-status" id="<%= allUsers[i]['_id']%>-status">
+                  offline
+                </p>
+                <% } %>
+              </li>
+              <% }} %>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <h3 class="chat-head">Click to start the chat</h3>
+          <div class="chat-secion" style="display: none">
+            <div id="chat-container"></div>
+            <form action="" id="chat-form">
+              <input
+                type="text"
+                name="message"
+                placeholder="type text"
+                id="message"
+                required
+              />
+              <input type="submit" value="send message" />
+            </form>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</body>
+  </body>
 
-<script>
- const sender_id = '<%= userName._id%>';
-const socket = io("/user-namespace", {
-  auth: {
-    token: sender_id
-  }
-});
-
-socket.on("connect", () => {
-  console.log("Connected to the server");
-});
-
-socket.on("disconnect", () => {
-  console.log("Disconnected from the server");
-});
-
-socket.on('getOnlineUser', function(data){
-  $('#' + data.userId + '-status').text('Online');
-  $('#' + data.userId + '-status').removeClass('offline-status').addClass('online-status');
-});
-
-socket.on('getOfflineUser', function(data){
-  $('#' + data.userId + '-status').text('Offline');
-  $('#' + data.userId + '-status').removeClass('online-status').addClass('offline-status');
-});
-
-
-  $(document).ready(function () {
-    $(".user-list").click(function () {
-      $(".chat-head").hide();
-      $(".chat-secion").show();
+  <script>
+    const sender_id = "<%= userName._id%>";
+    var receiver_id;
+    const socket = io("/user-namespace", {
+      auth: {
+        token: sender_id,
+      },
     });
-  });
 
+    // socket.on("connect", () => {
+    //   console.log("Connected to the server");
+    // });
 
-</script>
+    // socket.on("disconnect", () => {
+    //   console.log("Disconnected from the server");
+    // });
+
+    socket.on("getOnlineUser", function (data) {
+      $("#" + data.userId + "-status").text("Online");
+      $("#" + data.userId + "-status")
+        .removeClass("offline-status")
+        .addClass("online-status");
+    });
+
+    socket.on("getOfflineUser", function (data) {
+      $("#" + data.userId + "-status").text("Offline");
+      $("#" + data.userId + "-status")
+        .removeClass("online-status")
+        .addClass("offline-status");
+    });
+    $(document).ready(function () {
+      $(".user-list").click(function () {
+        receiver_id= $(this).attr("data-id");
+        $(".chat-head").hide();
+        $(".chat-secion").show();
+        socket.emit('existingChat', {sender_id,receiver_id})
+      });
+    });
+
+    $("#chat-form").submit(function (event) {
+      event.preventDefault();
+      const message = $("#message").val();
+
+      $.ajax({
+        url: "/save-chat",
+        type: "POST",
+        data: {
+          sender_id: sender_id,
+          receiver_id: receiver_id,
+          message: message,
+        },
+        success: function (response) {
+          if (response.success) {
+            $("#message").val(" ");
+            let chat = response.data.message;
+            let html = `<div class="current-user-chat">
+              <h5>${chat}</h5>
+            </div>`;
+            $("#chat-container").append(html);
+            socket.emit("newChat", response.data);
+          } else {
+            console.log(response.msg);
+          }
+        },
+      });
+    });
+
+    socket.on("loadNewChat", function (data) {
+      if (sender_id == data.receiver_id && receiver_id == data.sender_id) {
+        console.log(data);
+        let html2 = `<div class="distance-user-chat">
+          <h5>${data.message}</h5>
+        </div>`;
+        $("#chat-container").append(html2);
+      } else {
+        console.log("proble not found");
+      }
+    })
+    socket.on('loadChats', function (data) {
+      $("#chat-container").html("");
+      var chats = data.chats;
+      let html = '';
+      for (let i = 0; i < chats.length; i++) {
+        let addClass = '';
+        if (chats[i]['sender_id'] == sender_id) {
+          addClass = 'current-user-chat';
+        } else {
+          addClass = 'distance-user-chat';
+        }
+        html += `
+          <div class="${addClass}">
+            <h5>${chats[i]['message']}</h5> 
+          </div>`;
+      }
+      $("#chat-container").append(html);
+    });
+  </script>
 </html>

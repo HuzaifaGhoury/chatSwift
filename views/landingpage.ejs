@@ -1,32 +1,54 @@
-<!-- <h1>landingPage</h1>
-<a href="/login">login</a> -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        .landingPage {
+            width: 100%;
+            height: 100vh;
+            background-image: url('./chatAppbackground.jpg');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+        #myElement {
+            width: 300px;
+            height: 200px;
+            border: 1px solid #ccc;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+    </style>
 </head>
-<style>
-    *{
-        padding: 0;
-        margin: 0;
-    }
-    .landingPage{
-    width: 100%;
-    height: 100vh;
-    background-image: url('./chatAppbackground.jpg');
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-size: cover;
-}
-</style>
 <body>
- 
-    <div class="landingPage">
-<h1>landingPage..</h1>
-<a href="/login">login</a>
-</div>
 
+    <div class="landingPage">
+        <h1>landingPage..</h1>
+        <a href="/login">login</a>
+    </div>
+
+    <div id="myElement">
+        <h1>landing Pagee</h1>
+        <a href="/login">login</a>
+    </div>
+
+    <script>
+        // Get the element by its ID
+        var myElement = document.getElementById("myElement");
+
+        // Set the background image using the style property
+        myElement.style.backgroundImage = "url('/chatBackground.jpg')";
+        // You can also set other background properties if needed
+        // myElement.style.backgroundRepeat = "no-repeat";
+        // myElement.style.backgroundSize = "cover";
+        // ... and so on
+    </script>
 </body>
 </html>

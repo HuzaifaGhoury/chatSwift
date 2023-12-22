@@ -1,16 +1,19 @@
-const mongoose = require('mongoose')
-const chatSchema = mongoose.Schema({
-    senderId:{
-        type:mongoose.Schema.Types.ObjectId,
-ref:"User"    },
-    reciverId:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"User" 
+const mongoose = require("mongoose");
+const chatSchema = mongoose.Schema(
+  {
+    sender_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
-    message:{
-        type:String,
-        require:true
+    receiver_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
-  
-},{timesstamps:true})
-module.exports = mongoose.model('Chat',chatSchema)
+    message: {
+      type: String,
+      require: true,
+    },
+  },
+  { timesstamps: true }
+);
+module.exports = mongoose.model("Chat", chatSchema);

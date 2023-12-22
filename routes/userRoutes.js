@@ -45,6 +45,7 @@ user_route.get("/login", auth.isLogout,userController.loadLogin);
 user_route.post("/login", userController.login);
 
 user_route.get("/logout", auth.isLogin,userController.logout);
+user_route.post("/save-chat",userController.saveChat);
 
 user_route.get("/dashboard",auth.isLogin, userController.loadDashboard);
 user_route.get("*",function(req,res){
